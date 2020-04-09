@@ -1,0 +1,83 @@
+# udo systemctl restart docker systemctl status docker # daemon locationA
+# vi /.../docker.service
+# ExecStart=/usr/bin/docker daemon -D -H tcp://0.0.0.0:2376 -H unix:///var/run/docker.sock # ubah opsi ExecStart
+# sudo systemctl daemon-reload
+# sudo systemctl restart docker
+# ln -sf /usr/libexec/docker/docker-proxy-current /usr/libexec/docker/docker-proxy
+# ln -sf /usr/libexec/docker/docker-runc-current /usr/libexec/docker/docker-runc
+# ln -sf /usr/libexec/docker/docker-init-current /usr/libexec/docker/docker-init
+# ubuntu 18
+# systemctl status docker # daemon location
+# vi /lib/systemd/system/docker.service
+# ExecStart=/usr/bin/docker daemon -H df:// -D -H tcp://0.0.0.0:2376 # ubah opsi ExecStart
+# sudo systemctl daemon-reload
+# sudo systemctl restart docker
+# iptables -P INPUT ACCEPT
+# iptables -P OUTPUT ACCEPT
+# iptables -P FORWARD ACCEPT
+# iptables -F
+proxy:
+  title: TOSERBAFAJAR BUSINESS INTELLIGENCE PORTAL
+  template-path: /opt/shinyproxy-template/3col 
+  logo-url: /assets/img/logo.png
+  landing-page: /
+  #hide-navbar : true
+  #heartbeat-rate: 100000
+  heartbeat-rate: 10000
+  heartbeat-timeout: 1000000 
+  port: 8089
+  container-wait-time: 1200000 
+  authentication: simple 
+  admin-groups: admin 
+  # Example: 'simple' authentication configuration
+  users:
+  - name: dadin 
+    password: password
+    groups: admin, topman
+  - name: akri 
+    password: password 
+    groups: admin, topman
+  - name: nardi 
+    password: nardi123 
+    groups: admin, topman
+  - name: habib 
+    password: habib123 
+    groups: admin, topman
+
+  docker:
+    #url: http://10.170.0.2:2376
+    url: http://35.220.238.77:2376
+    port-range-start: 30002
+  specs:
+  - id: 1  
+    display-name: Analisa Member 
+    description: Reporting
+    container-volumes: [ "/fajarapp/shiny/behavior:/srv/shiny-server","/fajarapp/shiny/behavior/data/member:/home/shiny"]
+    #container-cmd: ["R", "-e shiny::runApp('/srv/shiny-server/app')"]
+    container-image: shiny-flexdashboard
+    access-groups: [topman,support]
+
+  - id: 2 
+    display-name: Analisa Basket Size per Prime 
+    description: Reporting
+    container-volumes: [ "/fajarapp/shiny/basket-prime:/srv/shiny-server",  "/fajarapp/data:/home/shiny"]
+    #container-cmd: ["R", "-e shiny::runApp('/srv/shiny-server/app')"]
+    container-image: shiny-flexdashboard
+    access-groups: [topman,support]
+
+  - id: 3 
+    display-name: Analisa Basket per Divisi 
+    description: Reporting
+    container-volumes: [ "/fajarapp/shiny/basket-div:/srv/shiny-server","/fajarapp/data:/home/shiny"]
+    #container-cmd: ["R", "-e shiny::runApp('/srv/shiny-server/app')"]
+    container-image: shiny-flexdashboard
+    access-groups: [topman,support]
+
+
+logging:
+  file:
+    log/shinyproxy.log
+
+server:
+  servlet.session.timeout: 0
+
